@@ -62,9 +62,11 @@ Student Workflow
 <img width="1920" height="1080" alt="Screenshot (1349)" src="https://github.com/user-attachments/assets/9974daf7-599d-42e3-a9d7-200a2697089a" />
 
 Output
-[Telegram (1)](https://github.com/user-attachments/assets/c440f685-5189-4533-96e9-f70e0c824963)
-![Telegram (2)](https://github.com/user-attachments/assets/4543f556-feae-473e-a11e-6e9c3f8cb5e1)
-!![Telegram (3)](https://github.com/user-attachments/assets/bc583d6a-6fd1-4cf9-9e38-e2457e6b2e3c)
+![Telegram (2)](https://github.com/user-attachments/assets/abf5649f-ecb6-4c8a-97aa-b434ba4dc8b2)
+
+![Telegram (1)](https://github.com/user-attachments/assets/31191ae7-3e92-4cee-8646-5aec7578953f)
+
+
 
 👨‍💻 Author
 Hari Muthu Ganesh R
