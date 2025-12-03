@@ -6,14 +6,14 @@ Staff simply upload PDFs into Google Drive — the rest is fully automated.
 
 🔄 System Workflow Overview
 flowchart TD
-    A[Staff Uploads PDF<br>Google Drive] --> B[n8n Trigger<br>File Created]
-    B --> C[Extract Subject & Year<br>Function Node]
-    C --> D[Append to Google Sheets<br>Paper Database]
-    E[Student Requests<br>@nec_ques_bot] --> F[n8n Telegram Trigger]
-    F --> G[Extract Subject & Year<br>Student Workflow]
-    G --> H[Sheets Lookup<br>Match Papers]
-    H --> I[Build Reply<br>Function Node]
-    I --> J[Send PDF Link<br>Telegram Bot]
+    A [Staff Uploads PDF<br>Google Drive] --> B [n8n Trigger<br>File Created]
+    B --> C [Extract Subject & Year<br>Function Node]
+    C --> D [Append to Google Sheets<br>Paper Database]
+    E [Student Requests<br>@nec_ques_bot] --> F [n8n Telegram Trigger]
+    F --> G [Extract Subject & Year<br>Student Workflow]
+    G --> H [Sheets Lookup<br>Match Papers]
+    H --> I [Build Reply<br>Function Node]
+    I --> J [Send PDF Link<br>Telegram Bot]
 
 ⚙️ How It Works
 1. Staff Upload Workflow
@@ -55,7 +55,7 @@ PaperHub/
 ├── PaperHub-STAFF.json     # Staff upload workflow
 └── README.md               # Project documentation
 
-📝 Screenshot Placeholders (Replace later)
+📝 
 Staff Workflow
 <img width="1920" height="1080" alt="Screenshot (1350)" src="https://github.com/user-attachments/assets/a1837bc9-84cf-42c7-809b-fabaf77971bf" />
 
