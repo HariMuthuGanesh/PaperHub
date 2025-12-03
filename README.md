@@ -54,13 +54,17 @@ PaperHub/
 ├── PaperHub-STAFF.json     # Staff upload workflow
 └── README.md               # Project documentation
 
-
 📝 
 Staff Workflow
 <img width="1920" height="1080" alt="Screenshot (1350)" src="https://github.com/user-attachments/assets/a1837bc9-84cf-42c7-809b-fabaf77971bf" />
 
 Student Workflow
 <img width="1920" height="1080" alt="Screenshot (1349)" src="https://github.com/user-attachments/assets/9974daf7-599d-42e3-a9d7-200a2697089a" />
+
+Output
+[Telegram (1)](https://github.com/user-attachments/assets/c440f685-5189-4533-96e9-f70e0c824963)
+![Telegram (2)](https://github.com/user-attachments/assets/4543f556-feae-473e-a11e-6e9c3f8cb5e1)
+!![Telegram (3)](https://github.com/user-attachments/assets/bc583d6a-6fd1-4cf9-9e38-e2457e6b2e3c)
 
 👨‍💻 Author
 Hari Muthu Ganesh R
