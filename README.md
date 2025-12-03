@@ -1,7 +1,6 @@
 📚 PaperHub – Automated Question Paper Bot
 
 PaperHub is a demo automation system built using n8n that allows students to retrieve previous year question papers instantly using a Telegram bot.
-
 Staff simply upload PDFs into Google Drive — the rest is fully automated.
 
 🔄 System Workflow Overview
@@ -48,6 +47,7 @@ Telegram Bot API	Student interaction
 Google Drive API	Storage for uploaded papers
 Google Sheets API	Searchable paper database
 JavaScript (Function Nodes)	Parsing and logic
+
 📁 Project Files
 PaperHub/
 │
