@@ -1,0 +1,269 @@
+{
+  "name": "PaperHub - STUDENT",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "*",
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -144,
+        -16
+      ],
+      "id": "e78b0a17-4bb3-40b9-b631-0202671336d3",
+      "name": "Telegram Trigger",
+      "webhookId": "99000144-491f-41fd-91ea-872fcca4c829",
+      "credentials": {
+        "telegramApi": {
+          "id": "8PpPjFccFlWKSo2e",
+          "name": "PaperHub"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let raw = \"\";\nlet chatId = \"\";\n\n// read the message\nif ($input.first().json.message) {\n  raw = $input.first().json.message.text.toLowerCase().trim();\n  chatId = $input.first().json.message.chat.id;\n}\n\n// extract year\nconst yearMatch = raw.match(/\\b(20\\d{2})\\b/);\nlet year = yearMatch ? yearMatch[1] : \"\";\n\n// remove the year from text\nlet text = raw.replace(/\\b(20\\d{2})\\b/, \"\").trim();\n\n// split into words\nlet words = text.split(/\\s+/).filter(w => w);\n\n// detect subject\nlet subject = words.length > 0 ? words[0].toUpperCase() : \"\";\n\n// ❗ If subject has more than one word, it is a *longform name*\nif (words.length > 1) {\n  return [{\n    json: {\n      chatId,\n      subject: \"\",\n      year,\n      reply: \"Please use shortform for subjects. Example: CN 2023, OOPS 2022\",\n      forward: false\n    }\n  }];\n}\n\n// ❗ If no subject detected\nif (!subject) {\n  return [{\n    json: {\n      chatId,\n      subject: \"\",\n      year,\n      reply: \"Send a subject name. Example: CN 2023\",\n      forward: false\n    }\n  }];\n}\n\n// ✔ Valid shortform-like subject (ANY single word)\nreturn [{\n  json: {\n    chatId,\n    subject,\n    year,\n    forward: true\n  }\n}];\n``"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        112,
+        -16
+      ],
+      "id": "9e0c0c31-416a-4fa3-af8b-a407d06110ee",
+      "name": "Extract Subject"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1n1B2yS_Z8ffKLsrpG97dr992RUGzvmXik6RUCEias2o",
+          "mode": "list",
+          "cachedResultName": "PaperHub",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1n1B2yS_Z8ffKLsrpG97dr992RUGzvmXik6RUCEias2o/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1n1B2yS_Z8ffKLsrpG97dr992RUGzvmXik6RUCEias2o/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "SUBJECTS",
+              "lookupValue": "={{ $json.subject }}"
+            },
+            {
+              "lookupColumn": "YEAR",
+              "lookupValue": "={{ $json.year }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        576,
+        0
+      ],
+      "id": "693eae42-2cac-4c09-934f-6a2139ff6b63",
+      "name": "Google Sheet Lookup",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "bMLK2LmcoonCwWrZ",
+          "name": "PaperHub - Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const subject = $('Extract Subject').first().json.subject;\nconst chatId  = $('Extract Subject').first().json.chatId;\nconst year    = $('Extract Subject').first().json.year;\n\nlet rows = $input.all().map(i => i.json);\n\nrows = rows.filter(r => {\n  const yearVal = r.YEAR || r.Year || r.year;\n  const filename = r.FILENAME || r.Filename || r.filename;\n  const link = r.LINK || r.Link || r.link;\n  return yearVal || filename || link;\n});\n\nif (!subject) {\n  return [{\n    json: {\n      chatId,\n      reply: \"Please provide a valid subject. Example: OOPS 2023\"\n    }\n  }];\n}\n\nif (rows.length === 0) {\n  return [{\n    json: {\n      chatId,\n      reply: `❌ No papers found for ${subject} ${year || \"\"}.`\n    }\n  }];\n}\n\nlet msg = year\n  ? `Previous papers for ${subject} ${year}:\\n\\n`\n  : `Previous papers for ${subject}:\\n\\n`;\n\nrows.forEach((r, i) => {\n  const filename = r.FILENAME || r.Filename || r.filename || \"\";\n  const link = r.LINK || r.Link || r.link || \"\";\n  const yearVal = r.YEAR || r.Year || r.year || \"\";\n\n  msg += `${i + 1}. ${yearVal} - ${filename}\\n${link}\\n\\n`;\n});\n\nreturn [{\n  json: {\n    chatId,\n    reply: msg\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        0
+      ],
+      "id": "8c36cb29-9220-4ad2-84da-abc460c4a2f7",
+      "name": "Build Reply"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.reply }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "disable_notification": false,
+          "disable_web_page_preview": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "0dab4f80-4e73-4791-a9ee-e5f869b38f3c",
+      "name": "Send a text message",
+      "webhookId": "cd536c0f-a6e4-4148-92b7-6ab59ccfd2ad",
+      "alwaysOutputData": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "8PpPjFccFlWKSo2e",
+          "name": "PaperHub"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e915b094-a1f3-40ec-b1a9-e975c833769a",
+              "leftValue": "={{ $json.forward }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        320,
+        -16
+      ],
+      "id": "0ffcdeb7-b0bf-47c3-a84c-d04a5ff03603",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.reply }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "disable_notification": false,
+          "disable_web_page_preview": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        576,
+        -176
+      ],
+      "id": "85ac98aa-3b3a-48f0-b296-098454969580",
+      "name": "Send a text message1",
+      "webhookId": "cc0d260a-4e8c-484b-bdd9-8d14fe8c3b7d",
+      "credentials": {
+        "telegramApi": {
+          "id": "8PpPjFccFlWKSo2e",
+          "name": "PaperHub"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract Subject",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Subject": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheet Lookup": {
+      "main": [
+        [
+          {
+            "node": "Build Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Reply": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Sheet Lookup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "2d9c3af7-758e-478b-858a-45c41a8893c6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e5d167df7ab1918ef3753546c34ea46ff76f56bf3ba1cb43b40a45ac5f8666d6"
+  },
+  "id": "THN2t9LO1CO9otFh",
+  "tags": []
+}

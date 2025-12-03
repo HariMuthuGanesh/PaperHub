@@ -1,0 +1,185 @@
+{
+  "name": "PaperHub - STAFF",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1agvn7tzaSFaVJf_6huSfwurfQklfb_vT",
+          "mode": "list",
+          "cachedResultName": "PaperHub",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1agvn7tzaSFaVJf_6huSfwurfQklfb_vT"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        144,
+        -16
+      ],
+      "id": "cdf06064-d182-43ae-af37-b93345e49e22",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4a1EO23R3ltjJhqv",
+          "name": "PaperHub - drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst filename = input.name || input.originalFilename || \"\";\nconst clean = filename.replace(/\\.[^/.]+$/, \"\");\nconst parts = clean.split(/[_\\-\\s\\.\\(\\)]+/);\nconst subject = (parts[0] || \"\").toUpperCase();\nconst year = parts[1] || \"\";\nconst fileId = input.id;\nconst link = `https://drive.google.com/file/d/${fileId}/view`;\nreturn [{\n  json: {\n    subject,\n    year,\n    filename,\n    link\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        368,
+        -16
+      ],
+      "id": "eba3fa34-991d-45be-a407-b7243bad4a73",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1n1B2yS_Z8ffKLsrpG97dr992RUGzvmXik6RUCEias2o",
+          "mode": "list",
+          "cachedResultName": "PaperHub",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1n1B2yS_Z8ffKLsrpG97dr992RUGzvmXik6RUCEias2o/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1n1B2yS_Z8ffKLsrpG97dr992RUGzvmXik6RUCEias2o/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "SUBJECTS": "={{ $json.subject }}",
+            "YEAR": "={{ $json.year }}",
+            "FILENAME": "={{ $json.filename }}",
+            "LINK": "={{ $json.link }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "SUBJECTS",
+              "displayName": "SUBJECTS",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "YEAR",
+              "displayName": "YEAR",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "FILENAME",
+              "displayName": "FILENAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "LINK",
+              "displayName": "LINK",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        -16
+      ],
+      "id": "510fc156-525c-4dfa-9b46-bd5ecb38eca8",
+      "name": "Append row in sheet",
+      "retryOnFail": false,
+      "waitBetweenTries": 200,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "bMLK2LmcoonCwWrZ",
+          "name": "PaperHub - Sheets"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "timezone": "Asia/Kolkata"
+  },
+  "versionId": "adf86980-257b-4749-9bc8-f35f5f653c95",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e5d167df7ab1918ef3753546c34ea46ff76f56bf3ba1cb43b40a45ac5f8666d6"
+  },
+  "id": "Q8vjDEcxnYakjWQc",
+  "tags": []
+}
