@@ -48,12 +48,12 @@ Google Drive API	Storage for uploaded papers
 Google Sheets API	Searchable paper database
 JavaScript (Function Nodes)	Parsing and logic
 
-📁 Project Files
 PaperHub/
 │
 ├── PaperHub-STUDENT.json   # Student Telegram workflow
 ├── PaperHub-STAFF.json     # Staff upload workflow
 └── README.md               # Project documentation
+
 
 📝 
 Staff Workflow
